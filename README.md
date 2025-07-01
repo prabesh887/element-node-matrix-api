@@ -1,3 +1,9 @@
+# Configure env file
+
+```bash
+cp sample.env .env
+```
+
 # 📘 Docker Commands
 
 **1️⃣ Build the Docker image**
@@ -23,6 +29,8 @@ sudo docker network connect matrix-postgres email-3pid-api
 ```
 
 # OR RUN THIS SCRIPT
+
+#### Note: all variable names are defined in `docker-rebuild.sh`
 
 ```bash
   sudo ./scripts/docker-rebuild.sh
@@ -96,7 +104,7 @@ curl -X GET \
 
 ---
 
-## 5 Redact a Blocked Message by `event_id`
+## 5️⃣ Redact a Blocked Message by `event_id`
 
 ```bash
 curl -X GET \
@@ -122,7 +130,3 @@ curl -X POST http://localhost:3300/message/%24eventid123/redact \
 - All **write** and **read** APIs are protected by `x-api-key` header.
 - Use a **strong API key** in your `.env` file (`API_KEY=...`).
 - Rotate your API key if exposed.
-
-```
-
-```
