@@ -24,15 +24,9 @@ sudo docker network connect matrix-postgres email-3pid-api
 
 # OR RUN THIS SCRIPT
 
-1. ```bash
-   sudo ./scripts/docker-rebuild.sh
-   ```
-
-````
-
-2) ```bash
-sudo docker network connect matrix-postgres email-3pid-api
-````
+```bash
+  sudo ./scripts/docker-rebuild.sh
+```
 
 ---
 
@@ -128,3 +122,7 @@ curl -X POST http://localhost:3300/message/%24eventid123/redact \
 - All **write** and **read** APIs are protected by `x-api-key` header.
 - Use a **strong API key** in your `.env` file (`API_KEY=...`).
 - Rotate your API key if exposed.
+
+```
+
+```
