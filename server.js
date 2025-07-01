@@ -1,6 +1,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const emailRoutes = require("./routes/email");
+const messageRoutes = require("./routes/message");
 const pool = require("./db/db");
 
 dotenv.config();
@@ -35,6 +36,11 @@ app.get("/db-check", async (req, res) => {
 // ✅ POST /add-3pid-email/:user_mxid route
 // This route allows adding an email 3rd party identifier (3pid) for a user
 app.use("/add-3pid-email", emailRoutes);
+
+// ✅ GET /message/:eventId
+// ✅ POST /message/:eventId/redact
+
+app.use("/message", messageRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
