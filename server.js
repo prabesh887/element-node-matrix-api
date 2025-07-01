@@ -1,6 +1,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const emailRoutes = require("./routes/email");
+const pool = require("./db/db");
 
 dotenv.config();
 
@@ -19,9 +20,11 @@ app.get("/db-check", async (req, res) => {
     res.json({ status: "ok", db_time: result.rows[0].now });
   } catch (err) {
     console.error("❌ DB connection failed:", err.message);
-    res
-      .status(500)
-      .json({ status: "error", message: "Database connection failed" });
+    res.status(500).json({
+      status: "error",
+      message: "Database connection failed",
+      error: err.message, // Optional: add this for dev/debugging
+    });
   }
 });
 
