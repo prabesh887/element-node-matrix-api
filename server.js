@@ -17,9 +17,13 @@ app.get("/ping", (req, res) => {
 app.get("/db-check", async (req, res) => {
   try {
     const result = await pool.query("SELECT NOW()");
-    res.json({ status: "ok", db_time: result.rows[0].now });
+    res.json({
+      status: "ok",
+      db_time: result.rows[0].now,
+    });
   } catch (err) {
     console.error("❌ DB connection failed:", err.message);
+
     res.status(500).json({
       status: "error",
       message: "Database connection failed",
