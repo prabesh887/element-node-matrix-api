@@ -14,11 +14,11 @@ router.post("/", verifyApiKey, async (req, res) => {
 
   try {
     const query = `
-      SELECT e.event_id, e.room_id, e.type, e.sender, e.origin_server_ts, ej.content
-      FROM events e
-      JOIN event_json ej ON e.event_id = ej.event_id
-      WHERE e.event_id = $1
-    `;
+  SELECT e.event_id, e.room_id, e.type, e.sender, e.origin_server_ts, ej.json AS content
+  FROM events e
+  JOIN event_json ej ON e.event_id = ej.event_id
+  WHERE e.event_id = $1
+`;
 
     const result = await pool.query(query, [eventId]);
 
@@ -41,9 +41,9 @@ router.post("/", verifyApiKey, async (req, res) => {
   }
 });
 
-// ✅ POST /message/redact - redact message by passing eventId + roomId in body
+// ✅ POST /message/redact - redact message by passing eventId + roomId in body using Admin API
 router.post("/redact", verifyApiKey, async (req, res) => {
-  const { eventId, roomId } = req.body;
+  const { eventId, roomId, reason } = req.body;
   const accessToken = process.env.MATRIX_ADMIN_TOKEN;
 
   if (!eventId || !roomId) {
@@ -52,28 +52,34 @@ router.post("/redact", verifyApiKey, async (req, res) => {
       .json({ error: "eventId and roomId are required in body" });
   }
 
-  const txnId = Date.now(); // Unique transaction ID
   const url = `${
     process.env.MATRIX_BASE_URL
-  }/_matrix/client/v3/rooms/${encodeURIComponent(
+  }/_synapse/admin/v1/rooms/${encodeURIComponent(
     roomId
-  )}/redact/${encodeURIComponent(eventId)}/${txnId}`;
+  )}/redact/${encodeURIComponent(eventId)}`;
+
+  console.log(`🔴 Redacting event ${eventId} in room ${roomId} via Admin API`);
+
+  console.log("🔴 Admin API URL:", url);
 
   try {
     const result = await axios.post(
       url,
-      { reason: "Blocked message" },
+      { reason: reason || "Blocked message by moderator" },
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
         },
       }
     );
-    console.log("🚀 Redacted event:", result.data);
+
+    console.log("🚫 Redacted event via Admin API:", result.data);
 
     res.json({ status: "success", redacted: eventId });
   } catch (err) {
-    console.error("Redact failed:", err.message);
+    console.error("Redact (admin) failed:", err.message);
+    console.error("Redact (admin) failed:", err);
     res.status(err.response?.status || 500).json({
       error: err.response?.data || err.message,
     });

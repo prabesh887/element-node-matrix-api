@@ -86,41 +86,53 @@ curl -X POST \
 
 ---
 
-## 4️⃣ GET message from event table by `event_id`
+## 4️⃣ Fetch message from event table by `event_id`
 
 ```bash
-curl -X GET \
-  http://localhost:3300/message/$EVENT_ID \
-  -H 'x-api-key: your_api_key_here'
+curl -X POST http://localhost:3300/message \
+  -H 'x-api-key: your_api_key_here' \
+  -H 'Content-Type: application/json' \
+  -d '{"eventId": event_id}'
+
 ```
 
 ✅ Example:
 
 ```bash
-curl -X GET \
-  http://localhost:3300/message/%24eventid123 \
-  -H 'x-api-key: your_api_key_here'
+curl -X POST http://localhost:3300/message \
+  -H 'x-api-key: your_api_key_here' \
+  -H 'Content-Type: application/json' \
+  -d '{"eventId": "$cmjwjpfTqfWjVolOpOldvidya96RHQ-rMrMLZxaaxrc"}'
+
 ```
 
 ---
 
-## 5️⃣ Redact a Blocked Message by `event_id`
+## 5️⃣ Redact a Blocked Message by `event_id` & `room_id`
 
 ```bash
-curl -X GET \
- curl -X POST http://localhost:3300/message/$EVENT_ID/redact \
-  -H "Content-Type: application/json" \
-  -H "x-api-key: your_api_key_here" \
-  -d '{"roomId": "!roomid:matrix.guardii.ai"}
+curl -X POST http://localhost:3300/message/redact \
+  -H 'x-api-key: your_api_key_here' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "eventId": event_id,
+    "roomId": room_id
+  }'
+
 ```
 
 ✅ Example:
 
 ```bash
-curl -X POST http://localhost:3300/message/%24eventid123/redact \
-  -H "Content-Type: application/json" \
-  -H "x-api-key: your_api_key_here" \
-  -d '{"roomId": "!roomid:matrix.guardii.ai"}'
+curl -X POST http://localhost:3300/message/redact \
+  -H 'x-api-key: your_api_key_here' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "eventId": "$3YJQ73MH4k3AoVnHwovvKOypmOxXutyjo4NyAwTqnAM",
+    "roomId": "!GXQDtzmhtMOoUWqzVS:guardii.ai",
+    "reason": "Policy violation"
+  }'
+
 ```
 
 ---
