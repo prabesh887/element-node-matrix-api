@@ -6,44 +6,51 @@ cp sample.env .env
 
 # 📘 Docker Commands
 
-**1️⃣ Build the Docker image**
+# Build and start all services
 
-```bash
-docker build -t email-3pid-api .
-```
+docker-compose up --build
 
-**2️⃣ Run the container**
+# Start in detached mode (background)
 
-```bash
-docker run -d \
-  -p 3300:3300 \
-  --env-file .env \
-  --name email-3pid-api \
-  email-3pid-api
-```
+docker-compose up -d --build
 
-**3️⃣ Connect the container to Synapse database network**
+# View logs
 
-```bash
-sudo docker network connect matrix-postgres email-3pid-api
-```
+docker-compose logs -f
+docker-compose logs -f api # API logs only
+docker-compose logs -f postgres # Database logs only
 
-# OR RUN THIS SCRIPT
+# Stop all services
 
-#### Note: all variable names are defined in `docker-rebuild.sh`
+docker-compose down
 
-```bash
-  sudo ./scripts/docker-rebuild.sh
-```
+# Stop and remove all data (reset database)
 
----
+docker-compose down -v
+
+# Remove all containers and images
+
+docker-compose down -v --rmi all
+
+# Rebuild only the API service
+
+docker-compose build api
+
+# Restart a specific service
+
+docker-compose restart api
+
+# Execute commands in containers
+
+docker-compose exec api sh # Access API container
+docker-compose exec postgres psql -U appuser -d appdb # Access database
 
 # 🧪 Curl Commands
 
 ## 1️⃣ Check server connection
 
 ```bash
-curl http://localhost:3300/ping
+curl http://localhost:3300/health
 ```
 
 ✅ Expected output:
@@ -60,7 +67,7 @@ curl http://localhost:3300/ping
 ## 2️⃣ Check database connection
 
 ```bash
-curl http://localhost:3300/db-check
+curl http://localhost:3300/health/db
 ```
 
 ✅ Expected output:
@@ -74,41 +81,7 @@ curl http://localhost:3300/db-check
 
 ---
 
-## 3️⃣ Bind email to Matrix server
-
-```bash
-curl -X POST \
-  http://localhost:3300/add-3pid-email/@user:matrix.guardii.ai \
-  -H 'Content-Type: application/json' \
-  -H 'x-api-key: your_api_key_here' \
-  -d '{"email": "test@example.com"}'
-```
-
----
-
-## 4️⃣ Fetch message from event table by `event_id`
-
-```bash
-curl -X POST http://localhost:3300/message \
-  -H 'x-api-key: your_api_key_here' \
-  -H 'Content-Type: application/json' \
-  -d '{"eventId": event_id}'
-
-```
-
-✅ Example:
-
-```bash
-curl -X POST http://localhost:3300/message \
-  -H 'x-api-key: your_api_key_here' \
-  -H 'Content-Type: application/json' \
-  -d '{"eventId": "$cmjwjpfTqfWjVolOpOldvidya96RHQ-rMrMLZxaaxrc"}'
-
-```
-
----
-
-## 5️⃣ Redact a Blocked Message by `event_id` & `room_id`
+## Redact a Blocked Message by `event_id` & `room_id`
 
 ```bash
 curl -X POST http://localhost:3300/message/redact \
@@ -116,7 +89,8 @@ curl -X POST http://localhost:3300/message/redact \
   -H 'Content-Type: application/json' \
   -d '{
     "eventId": event_id,
-    "roomId": room_id
+    "roomId": room_id,
+    "reason": "Policy violation"
   }'
 
 ```
