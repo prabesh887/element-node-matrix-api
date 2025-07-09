@@ -5,8 +5,12 @@ const verifyApiKey = require("../middleware/verfiyApiKey");
 
 // ✅ POST /message/redact - redact message by passing eventId + roomId in body using Instagram Bot Access Token
 router.post("/redact", verifyApiKey, async (req, res) => {
-  const { eventId, roomId, reason } = req.body;
-  const accessToken = process.env.INSTAGRAM_BOT_TOKEN;
+  const { eventId, roomId, type, reason } = req.body;
+  let accessToken;
+  if (type == "instagram") {
+    accessToken = process.env.INSTAGRAM_BOT_TOKEN;
+  }
+  console.log("🔴 Redact message accessToken:", accessToken);
 
   if (!eventId || !roomId) {
     return res.status(400).json({
@@ -16,13 +20,7 @@ router.post("/redact", verifyApiKey, async (req, res) => {
 
   const transactionId = `txn_${Date.now()}`;
 
-  const url = `${
-    process.env.MATRIX_BASE_URL
-  }/_matrix/client/v3/rooms/${encodeURIComponent(
-    roomId
-  )}/redact/${encodeURIComponent(eventId)}/${encodeURIComponent(
-    transactionId
-  )}`;
+  const url = `${process.env.MATRIX_BASE_URL}/_matrix/client/v3/rooms/${roomId}/redact/${eventId}/${transactionId}`;
 
   console.log(`🔴 Redacting event ${eventId} in room ${roomId} via Client API`);
   console.log("🔴 Client API URL:", url);

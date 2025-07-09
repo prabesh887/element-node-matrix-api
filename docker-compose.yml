@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   postgres:
     image: postgres:15-alpine
@@ -47,6 +45,7 @@ services:
     restart: unless-stopped
     networks:
       - redact-network
+      - matrix-homeserver
 
 volumes:
   redact-db-data:
@@ -54,3 +53,6 @@ volumes:
 networks:
   redact-network:
     driver: bridge
+
+  matrix-homeserver: # 👈 Declare the external network
+    external: true
