@@ -16,14 +16,14 @@ function makePool(prefix) {
 }
 
 const redactEventPool = makePool("RE");
-const synapseMatrixPool = makePool("SYNAPSES");
+const synapseMatrixPool = makePool("SYNAPSE");
 
 // optional: log on connect / error
 [
   { pool: redactEventPool, name: "Redact Database" },
   { pool: synapseMatrixPool, name: "Synapse Matrix Database" },
 ].forEach(({ pool, name }) => {
-  pool.on("connect", () => console.log(`Connected to ${name} DB`));
+  pool.on("connect", () => console.log(`Connected to ${name}`));
   pool.on("error", (err) => {
     console.error(`Unexpected error on idle ${name} client`, err);
     process.exit(-1);

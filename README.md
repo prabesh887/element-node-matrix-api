@@ -8,42 +8,42 @@ cp sample.env .env
 
 # Build and start all services
 
-docker-compose up --build
+docker compose up --build
 
 # Start in detached mode (background)
 
-docker-compose up -d --build
+docker compose up -d --build
 
 # View logs
 
-docker-compose logs -f
-docker-compose logs -f api # API logs only
-docker-compose logs -f postgres # Database logs only
+docker compose logs -f
+docker compose logs -f api # API logs only
+docker compose logs -f postgres # Database logs only
 
 # Stop all services
 
-docker-compose down
+docker compose down
 
 # Stop and remove all data (reset database)
 
-docker-compose down -v
+docker compose down -v
 
 # Remove all containers and images
 
-docker-compose down -v --rmi all
+docker compose down -v --rmi all
 
 # Rebuild only the API service
 
-docker-compose build api
+docker compose build api
 
 # Restart a specific service
 
-docker-compose restart api
+docker compose restart api
 
 # Execute commands in containers
 
-docker-compose exec api sh # Access API container
-docker-compose exec postgres psql -U appuser -d appdb # Access database
+docker compose exec api sh # Access API container
+docker compose exec postgres psql -U appuser -d appdb # Access database
 
 # 🧪 Curl Commands
 

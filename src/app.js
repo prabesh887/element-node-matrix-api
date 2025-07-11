@@ -38,9 +38,9 @@ app.get("/health/db", async (req, res) => {
     console.error("DB Healthcheck Error:", err);
     res.status(500).json({
       status: "ERROR",
-      error: err.message,
+      message: "Database connection failed",
+      error: err, // avoid sending raw error in production
       timestamp: new Date().toISOString(),
-      fullError: err, // for debugging
     });
   }
 });

@@ -10,7 +10,8 @@ services:
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      test:
+        ["CMD-SHELL", "pg_isready -U ${RE_POSTGRES_USER} -d ${RE_POSTGRES_DB}"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -33,6 +34,7 @@ services:
     networks:
       - redact-network
       - matrix-homeserver
+      - matrix-postgres
 
 volumes:
   redact-db-data:
@@ -42,4 +44,7 @@ networks:
     driver: bridge
 
   matrix-homeserver: # 👈 Declare the external network
+    external: true
+
+  matrix-postgres: # 👈 Declare the external network
     external: true
