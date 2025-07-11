@@ -1,63 +1,69 @@
+// app.js
+require("dotenv").config();
 const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
-const dotenv = require("dotenv");
-const pool = require("./db/pool");
+
+const { redactEventPool, synapseMatrixPool } = require("./db/pool");
 const messageRoutes = require("./routes/messages");
 const eventRoutes = require("./routes/events");
+const classifierRoutes = require("./routes/classifiers");
 
-dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Security middleware
 app.use(helmet());
 app.use(cors());
 app.use(express.json({ limit: "10mb" }));
 
-// Health check endpoint
-app.get("/health", (req, res) => {
-  res.status(200).json({ status: "OK", timestamp: new Date().toISOString() });
-});
+// simple healthcheck
+app.get("/health", (req, res) =>
+  res.status(200).json({ status: "OK", timestamp: new Date().toISOString() })
+);
 
-// Database health check
+// combined DB healthcheck
 app.get("/health/db", async (req, res) => {
   try {
-    const result = await pool.query("SELECT NOW()");
+    const [p1, p2] = await Promise.all([
+      redactEventPool.query("SELECT NOW()"),
+      synapseMatrixPool.query("SELECT NOW()"),
+    ]);
+
     res.status(200).json({
       status: "OK",
-      database: "connected",
-      timestamp: result.rows[0].now,
+      redact: p1.rows[0].now,
+      synapse: p2.rows[0].now,
     });
-  } catch (error) {
+  } catch (err) {
+    console.error("DB Healthcheck Error:", err);
     res.status(500).json({
       status: "ERROR",
-      database: "disconnected",
-      error: error.message,
+      error: err.message,
+      timestamp: new Date().toISOString(),
+      fullError: err, // for debugging
     });
   }
 });
 
-// Routes
+// mount your routes
+// → in your route files you can now grab whichever pool you need via:
+//    const { redactEventPool, synapseMatrixPool } = require("../db/pools");
 app.use("/event", eventRoutes);
 app.use("/message", messageRoutes);
+app.use("/classifier", classifierRoutes);
 
-// Error handling middleware
+// 404 + generic error handlers...
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ error: "Something went wrong!" });
 });
+app.use("*", (req, res) => res.status(404).json({ error: "Route not found" }));
 
-// 404 handler
-app.use("*", (req, res) => {
-  res.status(404).json({ error: "Route not found" });
-});
-
-// Graceful shutdown
+// graceful shutdown
 process.on("SIGTERM", () => {
-  console.log("SIGTERM received, shutting down gracefully");
-  pool.end(() => {
-    console.log("Database connections closed");
+  console.log("SIGTERM received, closing DB connections");
+  Promise.all([redactEventPool.end(), synapseMatrixPool.end()]).then(() => {
+    console.log("All pools closed");
     process.exit(0);
   });
 });

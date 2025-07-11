@@ -2,10 +2,8 @@ services:
   postgres:
     image: postgres:15-alpine
     container_name: redact-db
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+    env_file:
+      - .env # ← loads POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB, etc.
     volumes:
       - redact-db-data:/var/lib/postgresql/data
       - ./db/initdb:/docker-entrypoint-initdb.d
@@ -25,19 +23,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    environment:
-      - NODE_ENV=${NODE_ENV}
-      - PORT=${PORT}
-      - API_KEY=${API_KEY}
-      - POSTGRES_HOST=${POSTGRES_HOST}
-      - POSTGRES_PORT=${POSTGRES_PORT}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
-      - MATRIX_ADMIN_TOKEN=${MATRIX_ADMIN_TOKEN}
-      - MATRIX_BASE_URL=${MATRIX_BASE_URL}
-      - INSTAGRAM_BOT=${INSTAGRAM_BOT}
-      - INSTAGRAM_BOT_TOKEN=${INSTAGRAM_BOT_TOKEN}
+    env_file:
+      - .env # ← now NODE_ENV, PORT, API_KEY, HF_TOKEN, HF_BASE_URL, etc. all come from .env
     volumes:
       - ./src:/app/src
     ports:
