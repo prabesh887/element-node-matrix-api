@@ -10,7 +10,10 @@ router.post("/redact", verifyApiKey, async (req, res) => {
   if (type == "instagram") {
     accessToken = process.env.INSTAGRAM_BOT_TOKEN;
   }
-  console.log("🔴 Redact message accessToken:", accessToken);
+  if (type == "twitter") {
+    accessToken = process.env.TWITTER_BOT_TOKEN;
+  }
+  console.log("🔴 Redact message type, accessToken:", type, accessToken);
 
   if (!eventId || !roomId) {
     return res.status(400).json({
