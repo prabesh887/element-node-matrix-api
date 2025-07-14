@@ -116,3 +116,9 @@ curl -X POST http://localhost:3300/message/redact \
 - All **write** and **read** APIs are protected by `x-api-key` header.
 - Use a **strong API key** in your `.env` file (`API_KEY=...`).
 - Rotate your API key if exposed.
+
+# Some CURLS
+
+```bash
+curl -X POST http://localhost:3300/message/room   -H "Content-Type: application/json"   -d '{"roomId": "!GXQDtzmhtMOoUWqzVS:guardii.ai"}'
+```

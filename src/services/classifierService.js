@@ -1,4 +1,3 @@
-// src/services/classifyService.js
 const OpenAI = require("openai");
 
 const DEFAULT_PEDOCILLIN_SENSITIVITY = 0.5;
