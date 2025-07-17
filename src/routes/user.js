@@ -4,8 +4,8 @@ const pool = require("../db/db");
 const verifyApiKey = require("../middleware/verfiyApiKey");
 const { addThreePidEmail } = require("../services/userService");
 
-// POST /add-3pid-email/:user_mxid
-router.post("/:user_mxid", verifyApiKey, async (req, res) => {
+// POST /user/add-3pid-email/:user_mxid
+router.post("/add-3pid-email/:user_mxid", verifyApiKey, async (req, res) => {
   const { user_mxid } = req.params;
   const { email } = req.body;
 
