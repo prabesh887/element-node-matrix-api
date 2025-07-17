@@ -122,3 +122,15 @@ curl -X POST http://localhost:3300/message/redact \
 ```bash
 curl -X POST http://localhost:3300/message/room   -H "Content-Type: application/json"   -d '{"roomId": "!GXQDtzmhtMOoUWqzVS:guardii.ai"}'
 ```
+
+```bash
+curl --location 'http://localhost:3300/message/room' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "roomId": "!GXQDtzmhtMOoUWqzVS:guardii.ai",
+    "recipientId":"@prabesh+dii:guardii.ai",
+    "platform": "instagram",
+    "senderId": "@instagram_17845301208312779:guardii.ai"
+
+}'
+```

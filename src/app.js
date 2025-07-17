@@ -9,6 +9,7 @@ const messageRoutes = require("./routes/messages");
 const eventRoutes = require("./routes/events");
 const classifierRoutes = require("./routes/classifiers");
 const alertRoutes = require("./routes/alerts");
+const userRoutes = require("./routes/user");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -53,6 +54,7 @@ app.use("/event", eventRoutes);
 app.use("/message", messageRoutes);
 app.use("/classifier", classifierRoutes);
 app.use("/alert", alertRoutes);
+app.use("/user", userRoutes);
 
 // 404 + generic error handlers...
 app.use((err, req, res, next) => {
