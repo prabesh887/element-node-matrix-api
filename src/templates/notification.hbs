@@ -1,0 +1,543 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guardii Alert - Parent Notification</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+    }
+
+    table {
+      border-collapse: collapse;
+      mso-table-lspace: 0pt;
+      mso-table-rspace: 0pt;
+    }
+
+    td {
+      padding: 0;
+      vertical-align: top;
+    }
+
+    .email-container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+    }
+
+    .logo-section {
+      background: white;
+      padding: 20px;
+      text-align: center;
+      border-bottom: 2px solid #f0f0f0;
+    }
+
+    .logo-placeholder {
+      width: 180px;
+      height: 50px;
+      background: #f8f9fa;
+      border: 2px dashed #dee2e6;
+      display: inline-block;
+      line-height: 46px;
+      color: #6c757d;
+      font-size: 14px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .alert-header {
+      background: #dc3545;
+      color: white;
+      padding: 25px;
+      text-align: center;
+    }
+
+    .alert-header.medium {
+      background: #fd7e14;
+    }
+
+    .alert-header.low {
+      background: #ffc107;
+      color: #212529;
+    }
+
+    .alert-title {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .alert-subtitle {
+      margin:
+        8px 0 0 0;
+      font-size: 16px;
+      opacity: 0.9;
+    }
+
+    .content {
+      padding: 30px 25px;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .greeting {
+      font-size: 18px;
+      margin-bottom: 20px;
+      color: #2c3e50;
+    }
+
+    .alert-summary {
+      background:
+        #f8d7da;
+      border: 1px solid #f5c6cb;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+
+    .alert-summary.medium {
+      background: #fff3cd;
+      border-color: #ffeaa7;
+    }
+
+    .alert-summary.low {
+      background: #d1ecf1;
+      border-color: #bee5eb;
+    }
+
+    .threat-score {
+      font-size: 24px;
+      font-weight:
+        bold;
+      text-align: center;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 15px 0;
+      background: #dc3545;
+      color: white;
+    }
+
+    .threat-score.medium {
+      background:
+        #fd7e14;
+    }
+
+    .threat-score.low {
+      background: #17a2b8;
+    }
+
+    .detection-details {
+      background: #f8f9fa;
+      border-left: 4px solid #dc3545;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .detection-details.medium {
+      border-left-color: #fd7e14;
+    }
+
+    .detection-details.low {
+      border-left-color:
+        #17a2b8;
+    }
+
+    .detail-item {
+      margin: 10px 0;
+      padding: 10px;
+      background:
+        white;
+      border-radius: 6px;
+      border-left: 3px solid #e9ecef;
+    }
+
+    .detail-label {
+      font-weight: 600;
+      color: #495057;
+      margin-bottom: 5px;
+    }
+
+    .detail-value {
+      color: #6c757d;
+    }
+
+    .conversation-preview {
+      background: #f1f3f4;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+      border: 1px solid #dee2e6;
+    }
+
+    .conversation-title {
+      font-size: 18px;
+      font-weight: 600;
+      color:
+        #2c3e50;
+      margin-bottom: 15px;
+    }
+
+    .message-item {
+      margin: 12px 0;
+      padding:
+        12px;
+      background: white;
+      border-radius: 8px;
+      border-left: 3px solid #007bff;
+    }
+
+    .message-item.flagged {
+      border-left-color: #dc3545;
+      background:
+        #fff5f5;
+    }
+
+    .message-user {
+      font-weight: 600;
+      color: #495057;
+      margin-bottom: 5px;
+    }
+
+    .message-content {
+      color: #6c757d;
+      font-style:
+        italic;
+    }
+
+    .message-timestamp {
+      font-size: 12px;
+      color: #adb5bd;
+      margin-top: 8px;
+    }
+
+    .flagged-content {
+      background: #f8d7da;
+      color: #721c24;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    .recommendations {
+      background: #d4edda;
+      border: 1px solid #c3e6cb;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 25px 0;
+    }
+
+    .recommendations-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #155724;
+      margin-bottom: 15px;
+    }
+
+    .recommendation-item {
+      margin: 8px 0;
+      padding-left: 20px;
+      position:
+        relative;
+    }
+
+    .recommendation-item:before {
+      content: "✓";
+      position:
+        absolute;
+      left: 0;
+      color: #28a745;
+      font-weight: bold;
+    }
+
+    .urgent-notice {
+      background: #721c24;
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .contact-info {
+      background: #e2e3e5;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+
+    .contact-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #495057;
+      margin-bottom: 10px;
+    }
+
+    .footer {
+      background: #2c3e50;
+      color: white;
+      padding: 25px;
+      text-align:
+        center;
+    }
+
+    .footer p {
+      margin: 5px 0;
+    }
+
+    .disclaimer {
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 20px 0;
+      font-size: 14px;
+      color: #6c757d;
+    }
+
+    /* Media Queries for Mobile */
+    @media screen and (max-width: 600px) {
+      .email-container {
+        width: 100% !important;
+      }
+
+      .content {
+        padding: 20px 15px !important;
+      }
+
+      .alert-header {
+        padding: 20px 15px !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f8f9fa;">
+    <tr>
+      <td align="center" style="padding: 20px 0;">
+        <table class="email-container" width="650" cellpadding="0" cellspacing="0" border="0"
+          style="background: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+
+          <!-- Logo Section -->
+          <tr>
+            <td class="logo-section">
+              <!-- Replace with your actual logo -->
+              <img src='https://recant-donot-trust-photos.s3.us-east-1.amazonaws.com/logo.png' alt="Guardii Logo" style="max-width: 180px; height: auto; max-height: 50px;">
+              {{!-- <div class="logo-placeholder">
+                🛡️ [Guardii Logo Here]
+              </div> --}}
+            </td>
+          </tr>
+
+          <!-- Alert Header Section - Change class based on threat level -->
+          <tr>
+            <td class="alert-header">
+              <!-- Use: alert-header / alert-header medium / alert-header low -->
+              <h1 class="alert-title">🚨 SAFETY ALERT DETECTED</h1>
+              <p class="alert-subtitle">Concerning conversation detected in
+                your child's messages</p>
+            </td>
+          </tr>
+
+          <!-- Content Section -->
+          <tr>
+            <td class="content">
+              <div class="greeting">
+                Dear
+                {{parentName}},<br />
+              </div>
+
+              <p>Our AI monitoring system has detected potentially concerning
+                content in your child's recent conversations. This automated
+                alert is designed to help you stay informed about your child's
+                digital interactions.</p>
+
+              <!-- Alert Summary -->
+              <div class="alert-summary">
+                <!-- Use: alert-summary / alert-summary medium / alert-summary low -->
+                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                  <tr>
+                    <td>                   
+                      <strong>Platform:</strong>
+                      <span style="text-transform: capitalize">{{platform}}</span><br />
+                      <strong>Chat/Group:</strong>
+                      {{chatName}}
+                      <br />
+                      <strong>Detection Time:</strong>
+                      {{formatDateTime detection_time}}<br />
+                      <strong>Messages Analyzed:</strong>
+                      Last
+                      {{messages_analyzed}}
+                      messages
+                    </td>
+                  </tr>
+                </table>
+              </div>
+
+              <!-- Threat Score -->
+              <div class="threat-score">
+                <!-- Use: threat-score / threat-score medium / threat-score low -->
+                🎯 THREAT SCORE:
+                {{threat_score_percent}}/100 –
+                {{threat_level}}
+                RISK
+                <!-- Examples: HIGH RISK (80-100), MEDIUM RISK (50-79), LOW RISK (10-49) -->
+              </div>
+
+              <!-- Detection Details -->
+              <div class="detection-details">
+                <!-- Use: detection-details / detection-details medium / detection-details low -->
+                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                  <tr>
+                    <td>
+                      <strong>🎯 Detected Concerns:</strong>
+                      <div class="detail-item">
+                        <div class="detail-label">Primary Threat:</div>
+                        <div class="detail-value">{{primary_threat}}</div>
+                      </div>
+                      <div class="detail-item">
+                        <div class="detail-label">Confidence Level:</div>
+                        <div class="detail-value">{{confidence_percent}}%</div>
+                      </div>
+                      <div class="detail-item">
+                        <div class="detail-label">Keywords Detected:</div>
+                        <div class="detail-value">
+                          {{keywords_count}}
+                          terms:
+                          {{#each keywords}}{{this}}{{#unless @last}},
+                          {{/unless}}{{/each}}
+                        </div>
+                      </div>
+                      <div class="detail-item">
+                        <div class="detail-label">Participants:</div>
+                        <div class="detail-value">{{participants_count}}
+                          people in conversation</div>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+
+              <!-- Conversation Preview -->
+              <div class="conversation-preview">
+                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                  <tr>
+                    <td>
+                      <div class="conversation-title">💬 Conversation Preview
+                        (Filtered)</div>
+                      <p style="font-size: 14px; color: #6c757d; margin-bottom: 15px;">
+                        <em>Note: Content has been filtered for sensitivity.
+                          Full conversation available in your dashboard.</em>
+                      </p>
+
+                      {{#each conversation_preview}}
+                      <div class="message-item {{#if flagged}}flagged{{/if}}">
+                        <div class="message-user">👤 {{speaker}}</div>
+                        <div class="message-content">
+                          {{#if flagged}}
+                          <span class="flagged-content"> {{content}}</span>
+                          {{else}}
+                          {{content}}
+                          {{/if}}
+                        </div>
+                        <div class="message-timestamp">
+                          🕐 {{formatDateTime timestamp}}{{#if flagged}} – ⚠️ FLAGGED{{/if}}
+                        </div>
+                      </div>
+                      {{/each}}
+
+                    </td>
+                  </tr>
+                </table>
+              </div>
+
+              <!-- Urgent Notice for High Risk -->
+              <div class="urgent-notice">
+                <strong>⚠️ IMMEDIATE ATTENTION REQUIRED</strong><br />
+                The detected content suggests potential immediate risk to your
+                child's safety. Please review the full conversation and
+                consider taking immediate action.
+              </div>
+
+              <!-- Recommendations -->
+              <div class="recommendations">
+                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                  <tr>
+                    <td>
+                      <div class="recommendations-title">🛡️ Recommended
+                        Actions</div>
+                      <p>Based on the detected concerns, we recommend the
+                        following actions:</p>
+                        {{#each recommended_actions}}
+                    <div class="recommendation-item"> - {{this}}</div>
+                  {{/each}}
+                    </td>
+                  </tr>
+                </table>
+              </div>
+
+              <!-- Contact Information -->
+              {{!-- <div class="contact-info">
+                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                  <tr>
+                    <td>
+                      <div class="contact-title">📞 Need Help?</div>
+                      <p><strong>Guardii Support:</strong>
+                        hello@guardii.ai | 1-800-SAFE-KID</p>
+                      <p><strong>Crisis Resources:</strong>
+                        National Suicide Prevention Lifeline: 988</p>
+                      <p><strong>View Full Report:</strong>
+                        <a href="[DASHBOARD_LINK]" style="color: #007bff;">Login to Dashboard</a>
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </div> --}}
+
+              <!-- Disclaimer -->
+              <div class="disclaimer">
+                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                  <tr>
+                    <td>
+                      <strong>Important:</strong>
+                      This alert is generated by AI analysis and may include
+                      false positives. Please review the full context before
+                      taking action. Guardii is designed to assist, not
+                      replace, parental supervision and communication.
+                    </td>
+                  </tr>
+                </table>
+              </div>
+
+              <p>Stay vigilant, stay informed, and keep your child safe
+                online.</p>
+
+              <p>Best regards,<br />
+                <strong>The Guardii Team</strong><br />
+                Protecting families in the digital age
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer Section -->
+          <tr>
+            <td class="footer">
+              <p><strong>Guardii - AI-Powered Family Safety</strong></p>
+              <p style="color: whitesmoke">📧 hello@guardii.ai | 🌐 www.guardii.ai</p>
+              <p><em>Keeping families safe in the digital world</em></p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+
+</html>

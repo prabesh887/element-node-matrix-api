@@ -8,6 +8,7 @@ const { redactEventPool, synapseMatrixPool } = require("./db/pool");
 const messageRoutes = require("./routes/messages");
 const eventRoutes = require("./routes/events");
 const classifierRoutes = require("./routes/classifiers");
+const alertRoutes = require("./routes/alerts");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -51,6 +52,7 @@ app.get("/health/db", async (req, res) => {
 app.use("/event", eventRoutes);
 app.use("/message", messageRoutes);
 app.use("/classifier", classifierRoutes);
+app.use("/alert", alertRoutes);
 
 // 404 + generic error handlers...
 app.use((err, req, res, next) => {
